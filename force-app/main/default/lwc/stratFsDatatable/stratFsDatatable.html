@@ -1,0 +1,69 @@
+<template>
+    <lightning-card  title="Creditor Information">
+        <template if:true={data}>
+            <lightning-datatable 
+                data={data} 
+                columns={columns} 
+                key-field="Id"
+                onrowselection={getSelectedRows}
+                column-widths-mode="auto" 
+                wrap-text-max-lines="3" 
+                class="slds-table_bordered slds-table_col-bordered">
+            </lightning-datatable>
+            <lightning-button-group class="slds-m-top_small">
+                <lightning-button label="Add Debt" onclick={addRow}></lightning-button>
+                <lightning-button label="Remove Debt" onclick={removeRow}></lightning-button>
+            </lightning-button-group>
+            <div class="slds-box slds-box_small slds-m-top_small bold background-fill">
+                <span title="Total">Total: </span>
+                <lightning-formatted-number value={total} 
+                                            format-style="currency" 
+                                            currency-code="USD"
+                                            style="float:right">
+                </lightning-formatted-number>
+            </div>
+            <div class="slds-m-top_small slds-m-left_small bold">
+                <span title="Total Row Count">Total Row Count: {totalRowCount} </span> 
+                <span title="Total Check Count" style="padding-left: 50px;">Check Count Row: {totalCheckCount} </span>
+            </div>
+        </template>
+        <template if:true={error}>
+            {error}
+        </template>
+    </lightning-card>
+
+    <template if:true={isModalOpen}>
+        <!-- Modal/Popup Box LWC starts here -->
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- Modal/Popup Box LWC header here -->
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                        <lightning-icon icon-name="utility:close"
+                            alternative-text="close"
+                            variant="inverse"
+                            size="small" ></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Create New Creditor Information</h2>
+                </header>
+                <!-- Modal/Popup Box LWC body starts here -->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <div class="slds-p-around_small input-class">   
+                        <lightning-input data-field="creditor" type="text" label="Creditor" required></lightning-input>
+                        <lightning-input data-field="firstName" type="text" label="First Name"></lightning-input>
+                        <lightning-input data-field="lastName" type="text" label="Last Name"></lightning-input>
+                        <lightning-input data-field="minPay" type="number" step=".01" label="Min Pay %"></lightning-input>
+                        <lightning-input data-field="balance" type="number" step=".01" label="Balance" required></lightning-input>
+                    </div>
+                </div>
+                <!-- Modal/Popup Box LWC footer starts here -->
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" onclick={closeModal} title="Cancel">Cancel</button>
+                    <button class="slds-button slds-button_brand" onclick={submitDetails} title="Create">Create</button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>
